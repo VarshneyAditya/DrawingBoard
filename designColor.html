@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color</title>
+    <style>
+         /* html{
+            border: 1px solid red;
+        }
+        body{
+            border: 1px solid green;
+        } */
+        .outer{
+            border: 1px solid palevioletred;
+            /* background-color: lightcyan; */
+            width: 100px;
+            height: 50px;
+            display: flex;
+            align-items:center;
+            justify-content: space-evenly;
+        }
+        .red{
+            border: 1px solid black;
+            background-color: red;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+        }
+        .green{
+            border: 1px solid black;
+            background-color: greenyellow;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+        }
+        .blue{
+            border: 1px solid black;
+            background-color: blueviolet;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+        }
+        .color-Area{
+            border: 1px solid grey;
+            height:100px;
+            width: 100px;
+            margin-top: 30px;
+            margin-left: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="red"></div>
+        <div class="green"></div>
+        <div class="blue"></div>
+    </div>
+    <div class="color-Area"></div>
+
+    <script>
+        
+        let colorTobeFilled="yes";
+        let colorArea=document.querySelector(".color-Area");
+        let red=document.querySelector("div.red");
+        let green=document.querySelector("div.green");
+        let blue=document.querySelector("div.blue");
+
+            red.addEventListener("click", function(){
+                colorTobeFilled="red";
+                colorArea.style.backgroundColor=colorTobeFilled;
+            })
+
+            green.addEventListener("click", function(){
+                colorTobeFilled="green";
+                colorArea.style.backgroundColor=colorTobeFilled;
+            })
+
+            blue.addEventListener("click", function(){
+                colorTobeFilled="blue";
+                colorArea.style.backgroundColor=colorTobeFilled;
+            })
+
+    </script>
+</body>
+</html>

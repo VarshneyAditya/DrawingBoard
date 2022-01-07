@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width", initial-scale=1.0">
+    <title>Menu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css
+    ">
+</head>
+<body>
+
+<style>
+    .toolBar
+    {
+        display:flex;
+        /* border: 1px solid black; */
+        height: 80px;
+        width: 90vw;
+        margin:0 auto;
+        justify-content:space-evenly ;
+        align-items: center;
+        border-radius: 5px;
+        background-color: rgb(240, 233, 233);
+    }
+    .tool{        
+
+    }
+    .fas{
+            font-size: 44px;   
+     }
+    .far{
+            font-size: 44px;
+     }
+    .tool img{
+        height: 40px;
+    }
+    .colorArea{
+        /* border: 1px solid gray; */
+        border-radius: 4px;
+        display: flex;
+        /* height: 60px; */
+        width: 140px;
+        justify-content: space-evenly;
+    }
+    .color{
+        height: 40px;
+        width:  40px;
+        border-radius: 50%;
+        border: 1px solid gray;  
+    }
+        .red{
+            background-color: rgb(202, 66, 66);
+        }
+        .green{
+            background-color: greenyellow;
+        }
+        .blue{
+            background-color: blue;
+        }
+
+    .sizeMenu{
+        height:40px;
+        width:100px;
+        border: 1px solid gray;
+        display:none;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+        .size{
+            background-color:lightcoral;
+            border-radius:50%;
+            }
+        .size1{
+            height:10px;
+            width:10px; 
+        }
+        .size2{
+            height:15px;
+            width:15px;
+        }
+        .size3{
+            height:18px;
+            width:18px;
+        }
+        .size4{
+            height:22px;
+            width:22px;
+        }
+</style>
+<style>
+    .stickyParent{
+        /* display: none;    */
+        position: relative;
+        display: block;
+        overflow:hidden;
+        cursor: move;
+        float: left;
+        position: relative;
+        height: 180px;
+        width: 170px;
+   }
+    .navbar{
+        height: 10px;
+        width: 10px;
+        border-radius: 50%;
+
+    }
+    .close{
+        background-color: lightcoral;
+        margin-right: 3px;
+    }
+    .minimize{
+        background-color: lightgreen;
+        margin-right: 3px;
+
+    }
+    .menuBar{
+        height:20px;
+        width:150px;
+        border: 1px solid black;
+        display: flex;
+        align-items: center;            
+        justify-content:flex-end;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        border-radius: 3px;
+    }
+    .textArea{
+        height: 100px;
+        width: 148px;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        border-radius: 3px;
+    }
+    .drag img{
+        height: 10px;
+        margin-bottom: 8px;
+    }
+</style>
+
+<div class="toolBar">
+    <div class="tool" id="pencil">
+        <img src=".\resources-master\NewIcons\Blue_Pencil.svg" alt="">
+        <div class="sizeMenu">
+            <div class="size size1"></div>
+            <div class="size size2"></div>
+            <div class="size size3"></div>
+            <div class="size size4"></div>
+        </div>
+    </div>
+    <div class="tool" id="eraser">
+        <img src=".\resources-master\NewIcons\Eraser.svg" alt="">
+        <div class="sizeMenu">
+            <div class="size size1"></div>
+            <div class="size size2"></div>
+            <div class="size size3"></div>
+            <div class="size size4"></div>
+        </div>
+    </div>
+    <div class="tool">
+        <i class="fas fa-grip-lines"></i>
+        <div class="sizeMenu">
+            <div class="size size1"></div>
+            <div class="size size2"></div>
+            <div class="size size3"></div>
+            <div class="size size4"></div>
+        </div>
+    </div>
+    <div class="tool">
+        <i class="far fa-square"></i>
+        <div class="sizeMenu">
+            <div class="size size1"></div>
+            <div class="size size2"></div>
+            <div class="size size3"></div>
+            <div class="size size4"></div>
+        </div>
+    </div>
+    
+    <div class="tool " id="sticky1">
+        <img src="./resources-master/NewIcons/StickyNote.svg" alt="">
+    </div>
+    <div class="colorArea">
+        <div class="color red"></div>
+        <div class="color green"></div>
+        <div class="color blue "></div>
+    </div>
+</div>
+<!-- <div class="stickyParent">
+    <div class="menuBar">
+        <div class="close navbar"></div>
+        <div class="minimize navbar"></div>
+    </div>
+    <textarea name="" class="textArea"></textarea>
+</div> -->
+<canvas>
+</canvas>
+
+
+<script>
+    let pencilTool=document.querySelector("#pencil");
+    let eraserTool=document.querySelector("#eraser");
+    let lineTool=document.querySelector(".fa-grip-lines");
+    let rectTool=document.querySelector(".fa-square"); 
+    let sizeOptions=document.querySelectorAll(".sizeMenu");
+    let toolToBePerformed="pencilTool";
+    let finalX, finalY, initialX, initialY;
+    canvasBoard=document.querySelector("canvas");
+    let canvasTool=canvasBoard.getContext("2d");
+    canvasBoard.height=window.innerHeight;
+    canvasBoard.width=window.innerWidth;
+    // canvasTool.strokeStyle="red";
+    let body=document.querySelector("body");
+    let draw=false;
+    let canvasTop=canvasBoard.getBoundingClientRect().top;
+    let canvasLeft= canvasBoard.getBoundingClientRect().left;
+    let red=document.querySelector(".red");
+    let green=document.querySelector(".green");
+    let blue=document.querySelector(".blue");
+    let pencilSize=5;
+    let eraserSize=5;
+    let lineSize=5;
+    let rectSize=5;
+    canvasTool.strokeStyle="black";
+
+</script>
+<script>
+    pencilTool.addEventListener("click", function(response){
+        if(toolToBePerformed=="pencilTool"){
+            omit();
+            sizeOptions[0].style.display="flex";
+            sizeOptions[0].addEventListener("click", function(response){
+            let allsizelist=response.target.classList;
+            let clickedSize=allsizelist[1];
+            sizeTypeList=["size1", "size2", "size3", "size4"];
+            let check=sizeTypeList.includes(clickedSize);
+            let sizeToBePerformed=checkIt(check, clickedSize);
+            canvasTool.lineWidth = sizeToBePerformed;
+        })
+        }
+        else{
+            toolToBePerformed="pencilTool";
+            canvasTool.strokeStyle="black";
+            canvasTool.lineWidth = 2;
+        }
+        // console.log("pencilHUme");
+    })
+    eraserTool.addEventListener("click", function(response){
+        if(toolToBePerformed=="eraserTool"){
+            omit();
+            sizeOptions[1].style.display="flex";
+            sizeOptions[1].addEventListener("click", function(response){
+            let allsizelist=response.target.classList;
+            let clickedSize=allsizelist[1];
+            sizeTypeList=["size1", "size2", "size3", "size4"];
+            let check=sizeTypeList.includes(clickedSize);
+            let sizeToBePerformed=checkIt(check, clickedSize);
+            canvasTool.lineWidth = sizeToBePerformed;
+        })
+            }
+        else {
+            toolToBePerformed="eraserTool";
+            canvasTool.strokeStyle="white";
+            canvasTool.lineWidth = 2;
+        }
+        // console.log("eraserHUme");
+
+    })
+    lineTool.addEventListener("click", function(response){
+        if(toolToBePerformed=="lineTool"){
+            omit();
+            sizeOptions[2].style.display="flex";
+            sizeOptions[2].addEventListener("click", function(response){
+            let allsizelist=response.target.classList;
+            let clickedSize=allsizelist[1];
+            sizeTypeList=["size1", "size2", "size3", "size4"];
+            let check=sizeTypeList.includes(clickedSize);
+            let sizeToBePerformed=checkIt(check, clickedSize);
+            canvasTool.lineWidth = sizeToBePerformed;
+            // console.log(finalSize);
+
+        })
+        }
+        else{
+            toolToBePerformed="lineTool";
+            canvasTool.lineWidth = 2;
+        }
+        // console.log("lineHume");
+
+    })
+    rectTool.addEventListener("click", function(response){
+        if(toolToBePerformed=="rectTool"){
+            omit();
+            sizeOptions[3].style.display="flex";
+            sizeOptions[3].addEventListener("click", function(response){
+            let allsizelist=response.target.classList;
+            let clickedSize=allsizelist[1];
+            sizeTypeList=["size1", "size2", "size3", "size4"];
+            let check=sizeTypeList.includes(clickedSize);
+            let sizeToBePerformed=checkIt(check, clickedSize);
+            canvasTool.lineWidth = sizeToBePerformed;
+        })
+        }
+        else{
+            toolToBePerformed="rectTool";
+            canvasTool.lineWidth = 2;
+
+        }        
+        //console.log("rectHume");
+
+    })
+    body.addEventListener("mousedown", function(response){
+
+        initialX=response.clientX-canvasLeft;
+        initialY=response.clientY- canvasTop;
+        if(toolToBePerformed=="pencilTool"||toolToBePerformed=="eraserTool"){
+            draw=true;
+            canvasTool.beginPath();
+            canvasTool.moveTo(initialX, initialY);
+        }
+
+    })
+    body.addEventListener("mouseup",function(response){
+        finalX=response.clientX- canvasLeft;
+        finalY=response.clientY- canvasTop;
+        if(toolToBePerformed=="pencilTool"||toolToBePerformed=="eraserTool"){
+            draw=false;
+        }
+        
+        else if(toolToBePerformed=="rectTool"){
+            canvasTool.strokeRect(initialX, initialY, finalX-initialX, finalY-initialY);
+            console.log("rectTool", initialY);
+        }
+
+        else if(toolToBePerformed=="lineTool"){
+            console.log("lineTool");
+            canvasTool.beginPath();
+            canvasTool.moveTo(initialX, initialY);
+            canvasTool.lineTo(finalX, finalY);
+            canvasTool.stroke();
+        }
+        else if(toolToBePerformed=="stikcyNote"){
+            
+        }
+    })
+    body.addEventListener("mousemove", function(response){
+
+        if(draw==false){
+            return;
+        }
+        finalX=response.clientX- canvasLeft;
+        finalY=response.clientY- canvasTop;
+        canvasTool.lineTo(finalX, finalY);
+        canvasTool.stroke();
+    })
+    red.addEventListener("click", function(response){
+        canvasTool.strokeStyle="red";
+    })
+    green.addEventListener("click", function(response){
+        canvasTool.strokeStyle="green";
+    })
+    blue.addEventListener("click", function(response){
+        canvasTool.strokeStyle="blue";
+    })
+</script>
+<script>
+ function omit(){
+     for(let i=0; i<sizeOptions.length; i++){
+         sizeOptions[i].style.display="none";
+     }
+ }
+ function checkIt(check, clickedSize){
+    if(check)
+    {
+        if(clickedSize=="size1"){
+            return(5);
+        }
+        else if(clickedSize=="size2"){
+            return(8);
+        }
+        else if(clickedSize=="size3"){
+            return(12);
+        }
+        else if(clickedSize=="size4"){
+            return 16;
+        }
+    }   
+ }
+</script>
+<script>
+   
+    // let closeStickyNote=document.querySelector(".close");
+    // let btn=document.querySelector("#sticky");
+    // btn.addEventListener("click", function(response){
+    //     stickyParent.style.display="block";
+    // })
+    // let minimizeStickyNote=document.querySelector(".minimize");
+    // let stickyParent=document.querySelector(".stickyParent");
+    // let textArea=document.querySelector(".textArea");
+    // minimizeStickyNote.addEventListener("click", function(response){
+    //     if(textArea.style.display=="none"){
+    //         textArea.style.display="block";
+    //     }   
+    //     else{
+    //         textArea.style.display="none";
+    //     }
+    // })
+    // closeStickyNote.addEventListener("click", function(response){
+    //         stickyParent.style.display="none";
+    //         textArea.value="";
+            
+    // })
+
+
+    let stickyNote=document.querySelector("#sticky1");
+    stickyNote.addEventListener("click", function(response){
+        console.log("clicked")
+        toolToBePerformed="stikcyNote";
+        let sticky=document.createElement("div");
+        
+        sticky.innerHTML=`  <div class="stickyParent">
+                            <pre id="debug"></pre>
+                            <div class="menuBar">
+                            <div class="close navbar"></div>
+                            <div class="minimize navbar"></div>
+                            <div class="drag navbar" id="drag"> <img src="./resources-master/NewIcons/MoveIcon.svg" alt=""></div>
+                            </div>
+                            <textarea name="" class="textArea"></textarea>
+                            </div>  ` 
+    body.appendChild(sticky);
+    let minimizeStickyNote=sticky.querySelector(".minimize");
+    let closeStickyNote=sticky.querySelector(".close");
+    let stickyParent=sticky.querySelector(".stickyParent");
+    let dragSticky=sticky.querySelector("#drag");
+    let textArea=sticky.querySelector(".textArea");
+    minimizeStickyNote.addEventListener("click", function(response){
+        if(textArea.style.display=="none"){
+            textArea.style.display="block";
+        }   
+        else{
+            textArea.style.display="none";
+        }
+    })
+    closeStickyNote.addEventListener("click", function(response){
+            sticky.remove();
+    })
+    // stickyParent.addEventListener("mousedown",function(response){
+    //     x = stickyParent.offsetLeft - response.clientX;
+    //     y = stickyParent.offsetTop - response.clientY;
+    //     function drag(e) {
+    //         stickyParent.style.left = e.clientX + x + 'px';
+    //         stickyParent.style.top = e.clientY + y + 'px';
+    //     }
+    //     function stopDrag() {
+    //         document.removeEventListener('mousemove', drag);
+    //         document.removeEventListener('mouseup', stopDrag);
+    // }
+    //     document.addEventListener('mousemove', drag);
+    //     document.addEventListener('mouseup', stopDrag);
+    // })
+    })
+    
+        
+       
+</script>
+<script language="JavaScript" type="text/javascript">
+                
+    // this is simply a shortcut for the eyes and fingers
+    function $(id) {
+        return document.getElementById(id);
+    }
+    var _startX = 0; // mouse starting positions
+    var _startY = 0;
+    var _offsetX = 0; // current element offset
+    var _offsetY = 0;
+    var _dragElement; // needs to be passed from OnMouseDown to OnMouseMove
+    var _oldZIndex = 0; // we temporarily increase the z-index during drag
+    var _debug = $('debug'); 
+    draw=false;// makes life easier
+    InitDragDrop();
+
+    function InitDragDrop() {
+        
+        document.onmousedown = OnMouseDown;
+        document.onmouseup = OnMouseUp;
+    }
+
+    function OnMouseDown(e) {
+        // IE is retarded and doesn't pass the event object
+        if (e == null) e = window.event;
+        // IE uses srcElement, others use target
+        var target = e.target != null ? e.target : e.srcElement;
+        // _debug.innerHTML = target.className == 'stickyParent' //Selector
+        // ? 'draggable element clicked' : 'NON-draggable element clicked';
+        // for IE, left click == 1
+        // for Firefox, left click == 0
+        if ((e.button == 1 && window.event != null || e.button == 0) && target.className == 'stickyParent') //Selector
+        {
+            // grab the mouse position
+            _startX = e.clientX;
+            _startY = e.clientY;
+            // grab the clicked element's position
+            _offsetX = ExtractNumber(target.style.left);
+            _offsetY = ExtractNumber(target.style.top);
+            // bring the clicked element to the front while it is being dragged
+            _oldZIndex = target.style.zIndex;
+            target.style.zIndex = 10000;
+            // we need to access the element in OnMouseMove
+            _dragElement = target;
+            // tell our code to start moving the element with the mouse
+            document.onmousemove = OnMouseMove;
+            // cancel out any text selections
+            document.body.focus();
+            // prevent text selection in IE
+            document.onselectstart = function () {
+                return false;
+            };
+            // prevent IE from trying to drag an image
+            target.ondragstart = function () {
+                return false;
+            };
+            // prevent text selection (except IE)
+            return false;
+        }
+    }
+
+    function ExtractNumber(value) {
+        var n = parseInt(value);
+        return n == null || isNaN(n) ? 0 : n;
+    }
+
+    function OnMouseMove(e) {
+        if (e == null) var e = window.event;
+        // this is the actual "drag code"
+        _dragElement.style.left = (_offsetX + e.clientX - _startX) + 'px';
+        _dragElement.style.top = (_offsetY + e.clientY - _startY) + 'px';
+        _debug.innerHTML = '(' + _dragElement.style.left + ', ' + _dragElement.style.top + ')';
+    }
+
+    function OnMouseUp(e) {
+        if (_dragElement != null) {
+            _dragElement.style.zIndex = _oldZIndex;
+            // we're done with these events until the next OnMouseDown
+            document.onmousemove = null;
+            document.onselectstart = null;
+            _dragElement.ondragstart = null;
+            // this is how we know we're not dragging
+            _dragElement = null;
+            _debug.innerHTML = 'mouse up';
+        }
+    }
+    //-->
+</script>
+</body>
+</html>

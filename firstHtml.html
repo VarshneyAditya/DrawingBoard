@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .fas{
+            font-size: 2rem;
+            margin-left: 20px;
+            margin-right:20px;
+
+        }
+        .far{
+            font-size: 2rem;
+            margin-left: 20px;
+            margin-right:20px ;
+        }
+        .outer{
+            /* border: 1px solid palevioletred; */
+            background-color: lightgray;
+            width: 400px;
+            height: 50px;
+            display: flex;
+            align-items:center;
+            justify-content: space-evenly;
+            margin-left: 40px;
+            margin-top: 40px;
+        }
+        .red{
+            border: 1px solid black;
+            background-color: red;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+        }
+        .green{
+            border: 1px solid black;
+            background-color: greenyellow;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+        }
+        .blue{
+            border: 1px solid black;
+            background-color: blueviolet;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+        }
+        .color-Area{
+            border: 1px solid grey;
+            height:100px;
+            width: 100px;
+            margin-top: 30px;
+            margin-left: 30px;
+        }
+    </style>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css
+     ">
+    <title>PrepBoard</title>
+   
+</head>
+<body>
+    <!-- <h1>PepBoard</h1> -->
+    <div class="outer">
+        <div class="red"></div>
+        <div class="green"></div>
+        <div class="blue"></div>
+        <i class="fas fa-grip-lines"></i>
+        <i class="far fa-square"></i>
+        <i class="fas fa-pencil-alt"></i>
+    </div>
+    <canvas></canvas>
+</body>
+<script>
+
+    canvasBoard=document.querySelector("canvas");
+    canvasBoard.height=window.innerHeight;
+    canvasBoard.width=window.innerWidth;
+    let tool=canvasBoard.getContext("2d");
+        
+        // tool.fillStyle="green";
+        // tool.fillRect(10,10,200,200);
+    
+        // tool.strokeStyle="red"
+        // tool.strokeRect(100,100,400,400);
+        
+        // tool.moveTo(0,0);
+        // tool.stroke();
+        // tool.lineTo(200,100);
+        // tool.stroke();
+
+    let rectTool=document.querySelector(".far.fa-square");
+    let lineTool=document.querySelector(".fas.fa-grip-lines");
+    let pencilTool=document.querySelector(".fa-pencil-alt");
+    console.log(canvasBoard.getBoundingClientRect())
+    let canvasTop=canvasBoard.getBoundingClientRect().top;
+    let canvasLeft= canvasBoard.getBoundingClientRect().left;
+
+    let toolToBePerformed="lineTool"
+    let body=document.querySelector("body");
+    
+    rectTool.addEventListener("click", function(){
+             toolToBePerformed="rectTool";
+            //  console.log(toolToBePerformed);
+         })
+    lineTool.addEventListener("click", function(){
+            toolToBePerformed="lineTool";
+            // console.log(toolToBePerformed);
+    })
+    pencilTool.addEventListener("click", function(){
+        toolToBePerformed="pencilTool"
+        console.log(toolToBePerformed);
+    })
+
+    let initialX, initialY, finalX, finalY;
+
+    body.addEventListener("mousedown", function(response){
+         initialX= response.clientX-canvasLeft ;
+         initialY= response.clientY -canvasTop ;   
+         if(toolToBePerformed=="pencilTool"){
+            drawbyTool=true;
+            tool.moveTo(initialX, initialY);
+         }    
+
+            // console.log("mouseDOwn");
+            // tool.stroke();
+            // console.log(initialX,initialY);
+    })
+    
+    body.addEventListener("mouseup", function(response){
+
+         finalX=response.clientX -canvasLeft;
+         finalY=response.clientY -canvasTop;
+            console.log("mouseupToolValue", toolToBePerformed);
+         if(toolToBePerformed=="rectTool"){
+             tool.strokeRect(initialX,initialY,finalX-initialX, finalY-initialY);
+         }
+         else if(toolToBePerformed=="lineTool")
+         {
+            tool.moveTo(initialX,initialY)
+            tool.lineTo(finalX,finalY);
+            tool.stroke();
+        }
+         else{
+            drawbyTool=false;
+         }
+        // console.log("mouseUP");
+            
+    })
+    
+        //ColorArea
+
+        let colorTobeFilled="yes";
+        let colorArea=document.querySelector(".color-Area");
+        let red=document.querySelector("div.red");
+        let green=document.querySelector("div.green");
+        let blue=document.querySelector("div.blue");
+        let drawbyTool=false;
+
+            red.addEventListener("click", function(){
+                colorTobeFilled="red";
+                tool.strokeStyle=colorTobeFilled;
+            })
+
+            green.addEventListener("click", function(){
+                colorTobeFilled="green";
+                tool.strokeStyle=colorTobeFilled;
+            })
+
+            blue.addEventListener("click", function(){
+                colorTobeFilled="blue";
+                tool.strokeStyle=colorTobeFilled;
+            })
+
+    
+    // body.addEventListener("mousedown", function(response){
+    //     drawbyTool=true;  
+    //     initialX=response.clientX-canvasLeft;
+    //     initialY=response.clientY-canvasTop;
+    //     tool.moveTo(initialX, initialY);
+    // })
+
+    // body.addEventListener("mouseup", function(){
+    //     drawbyTool=false;
+    // })
+
+    body.addEventListener("mousemove", function(response){
+        
+
+        if(drawbyTool==false){
+            return;
+        }
+        finalX=response.clientX-canvasLeft;
+        finalY=response.clientY-canvasTop;
+        tool.lineTo(finalX, finalY);
+        tool.stroke();
+        initialY=finalY;
+        initialX=finalX;
+        
+    })
+        
+</script>
+</html>
